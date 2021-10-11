@@ -28,13 +28,9 @@ public class HashTable {
 
         int hashValue = hash(key);
 
-        if (items.get(hashValue) == null){
-            items.set(hashValue, new ArrayList<>());
-            items.get(hashValue).add(key);
-            return true;
-        }
         if(!items.get(hashValue).contains(key)){
             items.get(hashValue).add(key);
+            return true;
         }
         return false;
     }
@@ -45,8 +41,14 @@ public class HashTable {
         return items.get(hashValue).contains(key);
     }
 
-//    public String remove(String key){
-//        items.
-//    }
+    public boolean remove(String key){
+        int hashValue = hash(key);
+
+        if(items.get(hashValue).contains(key)){
+            items.get(hashValue).remove(key);
+            return true;
+        }
+        return false;
+    }
 }
 
