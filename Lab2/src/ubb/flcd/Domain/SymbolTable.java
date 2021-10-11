@@ -2,11 +2,11 @@ package ubb.flcd.Domain;
 
 import java.util.ArrayList;
 
-public class HashTable {
+public class SymbolTable {
     private ArrayList<ArrayList<String>> items;
     private int size;
 
-    public HashTable(int size) {
+    public SymbolTable(int size) {
         this.size = size;
         this.items = new ArrayList<>();
         for(int i=0;i<size;++i) this.items.add(new ArrayList<>());
