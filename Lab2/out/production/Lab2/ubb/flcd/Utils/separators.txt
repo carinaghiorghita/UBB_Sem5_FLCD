@@ -1,0 +1,20 @@
+int
+float
+string
+char
+for
+while
+if
+else
+read
+write
++
+:
+-
+*
+/
+=
+<
+>
+“ ”
+‘ ’

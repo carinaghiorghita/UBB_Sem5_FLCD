@@ -5,6 +5,7 @@ import ubb.flcd.Domain.*;
 public class Main {
 
     public static void main(String[] args) {
+/*
         SymbolTable symbolTable = new SymbolTable(16);
 
         System.out.println(symbolTable.add("abc"));
@@ -26,5 +27,10 @@ public class Main {
         System.out.println("---------------------------");
 
         System.out.println(symbolTable);
+*/
+
+        MyScanner scanner = new MyScanner("src/ubb/flcd/Utils/program.txt");
+
+        //System.out.println(scanner);
     }
 }
