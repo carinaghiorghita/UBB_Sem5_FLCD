@@ -50,5 +50,13 @@ public class SymbolTable {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "SymbolTable{" +
+                "items=" + items +
+                ", size=" + size +
+                '}';
+    }
 }
 

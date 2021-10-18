@@ -23,5 +23,8 @@ public class Main {
 
         System.out.println(symbolTable.remove("a"));
         System.out.println(symbolTable.remove("ad"));
+        System.out.println("---------------------------");
+
+        System.out.println(symbolTable);
     }
 }
