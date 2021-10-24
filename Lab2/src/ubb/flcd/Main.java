@@ -28,9 +28,33 @@ public class Main {
 
         System.out.println(symbolTable);
 */
+        System.out.println();
+        System.out.println("Program 1");
+        MyScanner scannerP1 = new MyScanner("src/ubb/flcd/Utils/P1.txt",
+                "src/ubb/flcd/Utils/PIF1.txt",
+                "src/ubb/flcd/Utils/ST1.txt");
+        scannerP1.scan();
 
-        MyScanner scanner = new MyScanner("src/ubb/flcd/Utils/program.txt");
+        System.out.println("------------------------");
+        System.out.println("Program 2");
+        MyScanner scannerP2 = new MyScanner("src/ubb/flcd/Utils/P2.txt",
+                "src/ubb/flcd/Utils/PIF2.txt",
+                "src/ubb/flcd/Utils/ST2.txt");
+        scannerP2.scan();
 
-        //System.out.println(scanner);
+
+        System.out.println("------------------------");
+        System.out.println("Program 3");
+        MyScanner scannerP3 = new MyScanner("src/ubb/flcd/Utils/P3.txt",
+                "src/ubb/flcd/Utils/PIF3.txt",
+                "src/ubb/flcd/Utils/ST3.txt");
+        scannerP3.scan();
+
+        System.out.println("------------------------");
+        System.out.println("Program with lexical errors");
+        MyScanner scannerP1err = new MyScanner("src/ubb/flcd/Utils/P1err.txt",
+                "src/ubb/flcd/Utils/PIFerr.txt",
+                "src/ubb/flcd/Utils/STerr.txt");
+        scannerP1err.scan();
     }
 }

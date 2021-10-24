@@ -41,6 +41,22 @@ public class SymbolTable {
         return items.get(hashValue).contains(key);
     }
 
+    public Pair<Integer, Integer> getPosition(String key){
+        if (this.contains(key)){
+            int listPosition = this.hash(key);
+            int listIndex = 0;
+            for(String el:this.items.get(listPosition)) {
+                if (!el.equals(key))
+                    listIndex++;
+                else
+                    break;
+            }
+
+            return new Pair<>(listPosition, listIndex);
+        }
+        return null;
+    }
+
     public boolean remove(String key){
         int hashValue = hash(key);
 
