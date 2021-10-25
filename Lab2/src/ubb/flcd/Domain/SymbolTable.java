@@ -54,7 +54,7 @@ public class SymbolTable {
 
             return new Pair<>(listPosition, listIndex);
         }
-        return null;
+        return new Pair<>(-1, -1);
     }
 
     public boolean remove(String key){
@@ -69,10 +69,18 @@ public class SymbolTable {
 
     @Override
     public String toString() {
-        return "SymbolTable{" +
-                "items=" + items +
-                ", size=" + size +
-                '}';
+        StringBuilder result = new StringBuilder();
+        for (int i=0; i<size; ++i) {
+            result.append(i).append(": [");
+            String separator = "";
+            for(String item: items.get(i)){
+                result.append(separator);
+                separator = ", ";
+                result.append(item);
+            }
+            result.append("]\n");
+        }
+        return result.toString();
     }
 }
 

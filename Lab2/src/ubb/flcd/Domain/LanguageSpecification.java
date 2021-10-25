@@ -7,63 +7,13 @@ import java.util.*;
 public class LanguageSpecification {
     private List<String> reservedWords = Arrays.asList("int", "float", "string", "char", "for", "while", "if", "else", "read", "print");
     private List<String> operators = Arrays.asList("+", "-", "*", "/", "%", "=", "==", "!=", "<", ">", "<=", ">=");
-    private List<String> separators = Arrays.asList("(", ")", ";", "{", "}", " ", "\t", "\n");
+    private List<String> separators = Arrays.asList("(", ")", ";", "{", "}","[", "]", " ", "\t", "\n");
 
     private final HashMap<String, Integer> codification = new HashMap<>();
 
     public LanguageSpecification() {
         createCodification();
     }
-
-/*
-    private void readOperators(){
-        try {
-            File operatorFile = new File("src/ubb/flcd/Utils/operators.txt");
-            Scanner reader = new Scanner(operatorFile);
-
-            while(reader.hasNextLine()){
-                String line = reader.nextLine();
-                operators.add(line);
-            }
-
-            reader.close();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void readSeparators(){
-        try {
-            File separatorsFile = new File("src/ubb/flcd/Utils/separators.txt");
-            Scanner reader = new Scanner(separatorsFile);
-
-            while(reader.hasNextLine()){
-                String line = reader.nextLine();
-                separators.add(line);
-            }
-
-            reader.close();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void readReservedWords(){
-        try {
-            File reservedWordsFile = new File("src/ubb/flcd/Utils/reservedWords.txt");
-            Scanner reader = new Scanner(reservedWordsFile);
-
-            while(reader.hasNextLine()){
-                String line = reader.nextLine();
-                separators.add(line);
-            }
-
-            reader.close();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-*/
 
     private void createCodification() {
         codification.put("identifier", 0);
@@ -109,7 +59,7 @@ public class LanguageSpecification {
     }
 
     public boolean isConstant(String token) {
-        String numericPattern = "^0|[+|-][1-9]([0-9])*|[1-9]([0-9])*$";
+        String numericPattern = "^0|[+|-][1-9]([0-9])*|[1-9]([0-9])*|[+|-][1-9]([0-9])*\\.([0-9])*|[1-9]([0-9])*\\.([0-9])*$";
         String charPattern = "^\'[a-zA-Z0-9_?!#*./%+=<>;)(}{ ]\'";
         String stringPattern = "^\"[a-zA-Z0-9_?!#*./%+=<>;)(}{ ]+\"";
         return token.matches(numericPattern) ||

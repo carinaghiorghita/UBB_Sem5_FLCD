@@ -89,7 +89,7 @@ public class MyScanner {
         StringBuilder constant = new StringBuilder();
 
         for (int i = position; i < line.length(); ++i) {
-            if ((ls.isSeparator(String.valueOf(line.charAt(i))) || ls.isOperator(String.valueOf(line.charAt(i)))) && ((i < line.length() - 1 && line.charAt(i + 1) != '\"') || (i == line.length() - 1)))
+            if ((ls.isSeparator(String.valueOf(line.charAt(i))) || ls.isOperator(String.valueOf(line.charAt(i)))) && ((i == line.length() - 2 && line.charAt(i + 1) != '\"') || (i == line.length() - 1)))
                 break;
             constant.append(line.charAt(i));
             if (line.charAt(i) == '\"' && i != position)
@@ -103,7 +103,7 @@ public class MyScanner {
         StringBuilder constant = new StringBuilder();
 
         for (int i = position; i < line.length(); ++i) {
-            if ((ls.isSeparator(String.valueOf(line.charAt(i))) || ls.isOperator(String.valueOf(line.charAt(i)))) && ((i < line.length() - 1 && line.charAt(i + 1) != '\'') || (i == line.length() - 1)))
+            if ((ls.isSeparator(String.valueOf(line.charAt(i))) || ls.isOperator(String.valueOf(line.charAt(i)))) && ((i == line.length() - 2 && line.charAt(i + 1) != '\'') || (i == line.length() - 1)))
                 break;
             constant.append(line.charAt(i));
             if (line.charAt(i) == '\'' && i != position)
@@ -123,7 +123,7 @@ public class MyScanner {
         StringBuilder token = new StringBuilder();
         token.append('-');
 
-        for (int i = position; i < line.length() && Character.isDigit(line.charAt(i)); ++i) {
+        for (int i = position + 1; i < line.length() && (Character.isDigit(line.charAt(i)) || line.charAt(i) == '.'); ++i) {
             token.append(line.charAt(i));
         }
 
@@ -140,7 +140,7 @@ public class MyScanner {
         StringBuilder token = new StringBuilder();
         token.append('+');
 
-        for (int i = position; i < line.length() && Character.isDigit(line.charAt(i)); ++i) {
+        for (int i = position + 1; i < line.length() && (Character.isDigit(line.charAt(i)) || line.charAt(i) == '.'); ++i) {
             token.append(line.charAt(i));
         }
 

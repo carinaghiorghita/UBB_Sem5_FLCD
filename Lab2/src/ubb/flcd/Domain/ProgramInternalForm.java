@@ -16,7 +16,6 @@ public class ProgramInternalForm {
         StringBuilder result = new StringBuilder();
         for (Pair<Integer, Pair<Integer, Integer>> pair : pif) {
             result.append(pair.getKey()).append(" -> (").append(pair.getValue().getKey()).append(", ").append(pair.getValue().getValue()).append(")\n");
-            result.append("___________________________________\n\n");
         }
         return result.toString();
     }
