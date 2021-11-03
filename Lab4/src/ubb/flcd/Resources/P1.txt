@@ -1,0 +1,17 @@
+float a=-23-4;
+int b=7+4;
+int c=0;
+int max;
+read(a);
+read(b);
+read(c);
+if (a>=b) {
+	max=a;
+}
+else {
+	max=b;
+}
+if(c>max) {
+	max=c;
+}
+print(max);

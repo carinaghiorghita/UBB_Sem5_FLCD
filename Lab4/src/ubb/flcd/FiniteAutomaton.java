@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class FiniteAutomation {
+public class FiniteAutomaton {
     public List<String> alphabet, states, finalStates;
     public String initialState;
-    public Map<Pair<String, String>, String> transitions;
+    public Map<Pair<String, String>, List<String>> transitions;
 
-    public FiniteAutomation(String filename) {
+    public FiniteAutomaton(String filename) {
         this.states = new ArrayList<>();
         this.alphabet = new ArrayList<>();
         this.finalStates = new ArrayList<>();
@@ -40,7 +40,14 @@ public class FiniteAutomation {
 
                 Pair<String, String> transitionStates = new Pair<>(transitionElements[0], transitionElements[1]);
 
-                transitions.put(transitionStates, transitionElements[2]);
+                if(!transitions.containsKey(transitionStates)) {
+                    List<String> transitionStatesList = new ArrayList<>();
+                    transitionStatesList.add(transitionElements[2]);
+                    transitions.put(transitionStates, transitionStatesList);
+                }
+                else {
+                    transitions.get(transitionStates).add(transitionElements[2]);
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -87,19 +94,29 @@ public class FiniteAutomation {
         return builder.toString();
     }
 
-    public boolean checkSequence(String sequence){
-        if(sequence.length() == 0) {
-            if (finalStates.contains(initialState))
-                return true;
-            else return false;
-        }
-        boolean isValid = true;
+    public boolean checkIfDFA(){
+        return !this.transitions.values().stream().anyMatch(list -> list.size() > 1);
+    }
 
+    public boolean checkSequence(String sequence){
+        if(sequence.length() == 0)
+            return finalStates.contains(initialState);
+
+        String state = initialState;
+        for(int i=0;i<sequence.length();++i){
+            Pair<String, String> key = new Pair<>(state, String.valueOf(sequence.charAt(i)));
+            if(transitions.containsKey(key))
+                state = transitions.get(key).get(0);
+            else
+                return false;
+        }
+
+        return finalStates.contains(state);
     }
 
     @Override
     public String toString() {
-        return "FiniteAutomation{" +
+        return "FiniteAutomaton{" +
                 "alphabet=" + alphabet +
                 ", states=" + states +
                 ", finalStates=" + finalStates +
