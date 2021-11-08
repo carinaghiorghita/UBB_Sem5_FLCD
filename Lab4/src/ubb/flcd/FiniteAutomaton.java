@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.util.*;
 
 public class FiniteAutomaton {
-    public List<String> alphabet, states, finalStates;
+    public Set<String> alphabet, states, finalStates;
     public String initialState;
-    public Map<Pair<String, String>, List<String>> transitions;
+    public Map<Pair<String, String>, Set<String>> transitions;
 
     public FiniteAutomaton(String filename) {
-        this.states = new ArrayList<>();
-        this.alphabet = new ArrayList<>();
-        this.finalStates = new ArrayList<>();
+        this.states = new HashSet<>();
+        this.alphabet = new HashSet<>();
+        this.finalStates = new HashSet<>();
         this.transitions = new HashMap<>();
 
         readFiniteAutomaton(filename);
@@ -24,29 +24,31 @@ public class FiniteAutomaton {
             Scanner reader = new Scanner(file);
 
             String statesLine = reader.nextLine();
-            states = Arrays.asList(statesLine.split(" "));
+            states = new HashSet<>(Arrays.asList(statesLine.split(" ")));
 
             String alphabetLine = reader.nextLine();
-            alphabet = Arrays.asList(alphabetLine.split(" "));
+            alphabet = new HashSet<>(Arrays.asList(alphabetLine.split(" ")));
 
             initialState = reader.nextLine();
 
             String finalStatesLine = reader.nextLine();
-            finalStates = Arrays.asList(finalStatesLine.split(" "));
+            finalStates = new HashSet<>(Arrays.asList(finalStatesLine.split(" ")));
 
             while(reader.hasNextLine()){
                 String transitionLine = reader.nextLine();
                 String[] transitionElements = transitionLine.split(" ");
 
-                Pair<String, String> transitionStates = new Pair<>(transitionElements[0], transitionElements[1]);
+                if(states.contains(transitionElements[0]) && states.contains(transitionElements[2]) && alphabet.contains(transitionElements[1])) {
 
-                if(!transitions.containsKey(transitionStates)) {
-                    List<String> transitionStatesList = new ArrayList<>();
-                    transitionStatesList.add(transitionElements[2]);
-                    transitions.put(transitionStates, transitionStatesList);
-                }
-                else {
-                    transitions.get(transitionStates).add(transitionElements[2]);
+                    Pair<String, String> transitionStates = new Pair<>(transitionElements[0], transitionElements[1]);
+
+                    if (!transitions.containsKey(transitionStates)) {
+                        Set<String> transitionStatesSet = new HashSet<>();
+                        transitionStatesSet.add(transitionElements[2]);
+                        transitions.put(transitionStates, transitionStatesSet);
+                    } else {
+                        transitions.get(transitionStates).add(transitionElements[2]);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -95,7 +97,7 @@ public class FiniteAutomaton {
     }
 
     public boolean checkIfDFA(){
-        return !this.transitions.values().stream().anyMatch(list -> list.size() > 1);
+        return this.transitions.values().stream().noneMatch(list -> list.size() > 1);
     }
 
     public boolean checkSequence(String sequence){
@@ -106,7 +108,7 @@ public class FiniteAutomaton {
         for(int i=0;i<sequence.length();++i){
             Pair<String, String> key = new Pair<>(state, String.valueOf(sequence.charAt(i)));
             if(transitions.containsKey(key))
-                state = transitions.get(key).get(0);
+                state = transitions.get(key).iterator().next();
             else
                 return false;
         }

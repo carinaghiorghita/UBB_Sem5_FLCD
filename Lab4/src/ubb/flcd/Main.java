@@ -48,7 +48,6 @@ public class Main {
                         System.out.println("Your sequence: ");
                         Scanner scanner2 = new Scanner(System.in);
                         String sequence = scanner2.nextLine();
-                        System.out.println(sequence.length());
 
                         if (fa.checkSequence(sequence))
                             System.out.println("Sequence is valid");
