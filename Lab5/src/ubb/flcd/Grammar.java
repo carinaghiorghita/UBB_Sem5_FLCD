@@ -11,15 +11,33 @@ public class Grammar {
     private String S = "";
 
     public Grammar() {
-        readFromFile("src/ubb/flcd/Resources/g1.txt");
+        readFromFile("src/ubb/flcd/Resources/g2.txt");
     }
 
     private void readFromFile(String filename) {
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filename));
 
-            this.N = new HashSet<>(Arrays.asList(reader.readLine().split("=")[1].replace("{","").replace("}","").strip().split(" ")));
-            this.E = new HashSet<>(Arrays.asList(reader.readLine().split("=")[1].replace("{","").replace("}","").strip().split(" ")));
+            String input = reader.readLine();
+            String[] NlineSplit = input.split("=",input.indexOf("="));
+            StringBuilder Nline = new StringBuilder();
+            for(int i=1;i<NlineSplit.length;++i)
+                Nline.append(NlineSplit[i]);
+            StringBuilder builder = new StringBuilder(Nline.toString());
+            builder.deleteCharAt(0).deleteCharAt(Nline.length()-2);
+            Nline = new StringBuilder(builder.toString());
+            this.N = new HashSet<>(Arrays.asList(Nline.toString().strip().split(" ")));
+
+            input = reader.readLine();
+            String[] ElineSplit = input.split("=",input.indexOf("="));
+            StringBuilder Eline = new StringBuilder();
+            for(int i=1;i<ElineSplit.length;++i)
+                Eline.append(ElineSplit[i]);
+            builder = new StringBuilder(Eline.toString());
+            builder.deleteCharAt(0).deleteCharAt(Eline.length()-2);
+            Eline = new StringBuilder(builder.toString());
+            this.E = new HashSet<>(Arrays.asList(Eline.toString().strip().split(" ")));
+
             this.S = reader.readLine().split("=")[1].strip();
 
             reader.readLine(); // first and last lines for productions will not contain any relevant information, we only need to check starting from the second until the second-last
@@ -82,11 +100,11 @@ public class Grammar {
             count = 0;
             for(List<String> rh : rhs){
                 for(String r : rh) {
-                    sb.append(r);
+                    sb.append(r).append(" ");
                 }
                 count++;
                 if (count < rhs.size())
-                    sb.append(" | ");
+                    sb.append("| ");
 
             }
             sb.append("\n");
@@ -96,19 +114,20 @@ public class Grammar {
     }
 
     public String printProductionsForNonTerminal(String nonTerminal){
-        StringBuilder sb = new StringBuilder(nonTerminal).append(" -> ");
+        StringBuilder sb = new StringBuilder();
 
         for(Set<String> lhs : P.keySet()) {
             if(lhs.contains(nonTerminal)) {
+                sb.append(nonTerminal).append(" -> ");
                 Set<List<String>> rhs = P.get(lhs);
                 int count = 0;
                 for (List<String> rh : rhs) {
                     for(String r : rh) {
-                        sb.append(r);
+                        sb.append(r).append(" ");
                     }
                     count++;
                     if (count < rhs.size())
-                        sb.append(" | ");
+                        sb.append("| ");
                 }
             }
         }

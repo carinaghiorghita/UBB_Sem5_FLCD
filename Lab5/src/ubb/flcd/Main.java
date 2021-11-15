@@ -8,7 +8,8 @@ public class Main {
         System.out.println(grammar.printNonTerminals());
         System.out.println(grammar.printTerminals());
         System.out.println(grammar.printProductions());
-        System.out.println(grammar.printProductionsForNonTerminal("A"));
+        System.out.println(grammar.printProductionsForNonTerminal("if_stmt"));
+        System.out.println(grammar.printProductionsForNonTerminal("declaration"));
         System.out.println(grammar.checkIfCFG());
     }
 }
