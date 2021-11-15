@@ -3,12 +3,11 @@ package ubb.flcd;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Grammar {
     private Set<String> N = new HashSet<>();
     private Set<String> E = new HashSet<>();
-    private HashMap<String, Set<String>> P = new HashMap<>();
+    private HashMap<String, Set<String>> P = new HashMap<>(); //lhs = list string; rhs = set list string
     private String S = "";
 
     public Grammar() {
