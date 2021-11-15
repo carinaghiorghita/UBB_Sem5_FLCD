@@ -7,7 +7,7 @@ import java.util.*;
 public class Grammar {
     private Set<String> N = new HashSet<>();
     private Set<String> E = new HashSet<>();
-    private HashMap<String, Set<String>> P = new HashMap<>(); //lhs = list string; rhs = set list string
+    private HashMap<Set<String>, Set<List<String>>> P = new HashMap<>(); //lhs = list string; rhs = set list string
     private String S = "";
 
     public Grammar() {
@@ -27,14 +27,21 @@ public class Grammar {
             while(line != null){
                 if(!line.equals("}")) {
                     String[] tokens = line.split("->");
-                    String lhs = tokens[0].strip();
-                    String[] rhs = tokens[1].split("\\|");
+                    String[] lhsTokens = tokens[0].split(",");
+                    String[] rhsTokens = tokens[1].split("\\|");
 
+                    Set<String> lhs = new HashSet<>();
+                    for(String l : lhsTokens)
+                        lhs.add(l.strip());
                     if(!P.containsKey(lhs))
                         P.put(lhs,new HashSet<>());
 
-                    for (String rh : rhs) {
-                        P.get(lhs).add(rh.strip());
+                    for(String rhsT : rhsTokens) {
+                        ArrayList<String> productionElements = new ArrayList<>();
+                        String[] rhsTokenElement = rhsT.strip().split(" ");
+                        for(String r : rhsTokenElement)
+                            productionElements.add(r.strip());
+                        P.get(lhs).add(productionElements);
                     }
                 }
                 line = reader.readLine();
@@ -63,13 +70,24 @@ public class Grammar {
     public String printProductions() {
         StringBuilder sb = new StringBuilder("P = { \n");
         P.forEach((lhs, rhs) -> {
-            sb.append(lhs).append(" -> ");
+            sb.append("\t");
             int count = 0;
-            for(String rh : rhs){
-                sb.append(rh);
+            for(String lh : lhs) {
+                sb.append(lh);
                 count++;
-                if(count<rhs.size())
+                if(count<lhs.size())
+                    sb.append(", ");
+            }
+            sb.append(" -> ");
+            count = 0;
+            for(List<String> rh : rhs){
+                for(String r : rh) {
+                    sb.append(r);
+                }
+                count++;
+                if (count < rhs.size())
                     sb.append(" | ");
+
             }
             sb.append("\n");
         });
@@ -80,36 +98,37 @@ public class Grammar {
     public String printProductionsForNonTerminal(String nonTerminal){
         StringBuilder sb = new StringBuilder(nonTerminal).append(" -> ");
 
-        Set<String> rhs = P.get(nonTerminal);
-        int count = 0;
-        for(String rh : rhs){
-            sb.append(rh);
-            count++;
-            if(count<rhs.size())
-                sb.append(" | ");
+        for(Set<String> lhs : P.keySet()) {
+            if(lhs.contains(nonTerminal)) {
+                Set<List<String>> rhs = P.get(lhs);
+                int count = 0;
+                for (List<String> rh : rhs) {
+                    for(String r : rh) {
+                        sb.append(r);
+                    }
+                    count++;
+                    if (count < rhs.size())
+                        sb.append(" | ");
+                }
+            }
         }
 
         return sb.toString();
     }
 
     public boolean checkIfCFG(){
-        for(String lhs : P.keySet()){
-            if(!N.contains(lhs))
+        for(Set<String> lhs : P.keySet()){
+            if(lhs.size()>1)
+                return false;
+            else if(!N.contains(lhs.iterator().next()))
                 return false;
 
-            Set<String> rhs = P.get(lhs);
-            for(String rh : rhs){
-                if(!rh.equals("epsilon")){
-                    if(rh.contains(" ")){
-                        //String[] rhTokens = rh.split(" ");
+            Set<List<String>> rhs = P.get(lhs);
 
-                    }
-                    else {
-                        for(int i=0;i<rh.length();++i){
-                            if(!(N.contains(String.valueOf(rh.charAt(i))) || E.contains(String.valueOf(rh.charAt(i)))))
-                                return false;
-                        }
-                    }
+            for(List<String> rh : rhs) {
+                for (String r : rh) {
+                    if(!(N.contains(r) || E.contains(r) || r.equals("epsilon")))
+                        return false;
                 }
             }
         }
