@@ -7,7 +7,7 @@ import java.util.*;
 public class Grammar {
     private Set<String> N = new HashSet<>();
     private Set<String> E = new HashSet<>();
-    private HashMap<Set<String>, Set<List<String>>> P = new HashMap<>(); //lhs = list string; rhs = set list string
+    private HashMap<Set<String>, Set<List<String>>> P = new HashMap<>();
     private String S = "";
 
     public Grammar() {
