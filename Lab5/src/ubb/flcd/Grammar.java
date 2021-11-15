@@ -117,6 +117,15 @@ public class Grammar {
     }
 
     public boolean checkIfCFG(){
+        var checkStartingSymbol = false;
+        for(Set<String> lhs : P.keySet())
+            if (lhs.contains(S)) {
+                checkStartingSymbol = true;
+                break;
+            }
+        if(!checkStartingSymbol)
+            return false;
+
         for(Set<String> lhs : P.keySet()){
             if(lhs.size()>1)
                 return false;
