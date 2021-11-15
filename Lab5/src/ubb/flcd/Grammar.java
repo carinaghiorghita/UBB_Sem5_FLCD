@@ -24,7 +24,7 @@ public class Grammar {
             for(int i=1;i<NlineSplit.length;++i)
                 Nline.append(NlineSplit[i]);
             StringBuilder builder = new StringBuilder(Nline.toString());
-            builder.deleteCharAt(0).deleteCharAt(Nline.length()-2);
+            builder.deleteCharAt(1).deleteCharAt(Nline.length()-2);
             Nline = new StringBuilder(builder.toString());
             this.N = new HashSet<>(Arrays.asList(Nline.toString().strip().split(" ")));
 
@@ -34,7 +34,7 @@ public class Grammar {
             for(int i=1;i<ElineSplit.length;++i)
                 Eline.append(ElineSplit[i]);
             builder = new StringBuilder(Eline.toString());
-            builder.deleteCharAt(0).deleteCharAt(Eline.length()-2);
+            builder.deleteCharAt(1).deleteCharAt(Eline.length()-2);
             Eline = new StringBuilder(builder.toString());
             this.E = new HashSet<>(Arrays.asList(Eline.toString().strip().split(" ")));
 
