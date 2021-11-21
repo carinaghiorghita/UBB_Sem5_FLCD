@@ -3,7 +3,7 @@ package ubb.flcd;
 public class Main {
 
     public static void main(String[] args) {
-	    Grammar grammar = new Grammar();
+	    Grammar grammar = new Grammar("src/ubb/flcd/Resources/g2_2.txt");
 
         System.out.println(grammar.printNonTerminals());
         System.out.println(grammar.printTerminals());

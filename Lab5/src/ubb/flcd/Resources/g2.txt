@@ -3,6 +3,7 @@ E = { ; int float long unsigned char string = + - * / % read print ( ) { } " ' =
 S = program
 P = {
     program -> declaration_list statements
+    declaration_list -> declaration declaration_list | epsilon
     declaration -> var_type identifier = expression | var_type identifier
     var_type -> int | float | long | unsigned | char | string
     identifier -> letter end_identifier

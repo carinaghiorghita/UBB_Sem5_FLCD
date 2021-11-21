@@ -10,8 +10,8 @@ public class Grammar {
     private HashMap<Set<String>, Set<List<String>>> P = new HashMap<>();
     private String S = "";
 
-    public Grammar() {
-        readFromFile("src/ubb/flcd/Resources/g2.txt");
+    public Grammar(String filename) {
+        readFromFile(filename);
     }
 
     private void readFromFile(String filename) {
