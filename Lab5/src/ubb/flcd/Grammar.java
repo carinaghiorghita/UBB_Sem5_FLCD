@@ -7,7 +7,7 @@ import java.util.*;
 public class Grammar {
     private Set<String> N = new HashSet<>();
     private Set<String> E = new HashSet<>();
-    private HashMap<Set<String>, Set<List<String>>> P = new HashMap<>();
+    private final HashMap<Set<String>, Set<List<String>>> P = new HashMap<>();
     private String S = "";
 
     public Grammar(String filename) {
@@ -40,7 +40,8 @@ public class Grammar {
 
             this.S = reader.readLine().split("=")[1].strip();
 
-            reader.readLine(); // first and last lines for productions will not contain any relevant information, we only need to check starting from the second until the second-last
+            // first and last lines for productions will not contain any relevant information, we only need to check starting from the second until the second-last
+            reader.readLine();
             String line = reader.readLine();
             while(line != null){
                 if(!line.equals("}")) {
@@ -161,5 +162,30 @@ public class Grammar {
             }
         }
         return true;
+    }
+
+    public Set<String> getN() {
+        return N;
+    }
+
+    public Set<String> getE() {
+        return E;
+    }
+
+    public HashMap<Set<String>, Set<List<String>>> getP() {
+        return P;
+    }
+
+    public String getS() {
+        return S;
+    }
+
+    public Set<List<String>> getProductionForNonterminal(String nonTerminal) {
+        for (Set<String> lhs : P.keySet()) {
+            if (lhs.contains(nonTerminal)) {
+                return P.get(lhs);
+            }
+        }
+        return new HashSet<>();
     }
 }
