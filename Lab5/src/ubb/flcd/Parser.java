@@ -3,17 +3,20 @@ package ubb.flcd;
 import java.util.*;
 
 public class Parser {
-    private Grammar grammar;
+    private final Grammar grammar;
     private HashMap<String, Set<String>> firstSet;
     private HashMap<String, Set<String>> followSet;
+    private HashMap<Pair, String> parseTable;
 
     public Parser(Grammar grammar) {
         this.grammar = grammar;
         this.firstSet = new HashMap<>();
         this.followSet = new HashMap<>();
+        this.parseTable = new HashMap<>();
 
         generateFirst();
         generateFollow();
+        generateParseTable();
     }
 
     public void generateFirst() {
@@ -106,12 +109,6 @@ public class Parser {
         while (isChanged) {
             isChanged = false;
             HashMap<String, Set<String>> newColumn = new HashMap<>();
-            /*HashMap<String, Set<String>> newColumn = new HashMap<>();
-            followSet.forEach((k,v) -> {
-                if(!newColumn.containsKey(k))
-                    newColumn.put(k,new HashSet<>());
-                newColumn.get(k).addAll(v);
-            });*/
 
             for (String nonterminal : grammar.getN()) {
                 newColumn.put(nonterminal, new HashSet<>());
@@ -156,6 +153,71 @@ public class Parser {
         }
     }
 
+    public void generateParseTable() {
+        List<String> rows = new ArrayList<>();
+        rows.addAll(grammar.getN());
+        rows.addAll(grammar.getE());
+        rows.add("$");
+
+        List<String> columns = new ArrayList<>();
+        columns.addAll(grammar.getE());
+        columns.add("$");
+
+        for (var row : rows)
+            for (var col : columns)
+                parseTable.put(new Pair(row, col), "err");
+
+        for (var col : columns)
+            parseTable.put(new Pair(col, col), "pop");
+
+        parseTable.put(new Pair("$", "$"), "acc");
+
+        var productions = grammar.getP();
+        productions.forEach((k,v) -> {
+            var key = k.iterator().next();
+
+            for(var production : v){
+                var firstSymbol = production.get(0);
+                if(grammar.getE().contains(firstSymbol))
+                    parseTable.put(new Pair(key, firstSymbol), String.join(" ",production));
+                else if(grammar.getN().contains(firstSymbol)){
+                    if(production.size() == 1)
+                        for (var symbol : firstSet.get(firstSymbol))
+                            parseTable.put(new Pair(key, symbol), String.join(" ",production));
+                    else {
+                        var i = 1;
+                        var nextSymbol = production.get(1);
+                        var firstSetForProduction = firstSet.get(firstSymbol);
+
+                        while (i < production.size() && grammar.getN().contains(nextSymbol)){
+                            var firstForNext = firstSet.get(nextSymbol);
+                            if(firstSetForProduction.contains("epsilon")){
+                                firstSetForProduction.remove("epsilon");
+                                firstSetForProduction.addAll(firstForNext);
+                            }
+
+                            i++;
+                            if(i<production.size())
+                                nextSymbol = production.get(i);
+                        }
+
+                        for(var symbol : firstSetForProduction)
+                            parseTable.put(new Pair(key, symbol), String.join(" ",production));
+                    }
+                }
+                else {
+                    var follow = followSet.get(key);
+                    for(var symbol : follow){
+                        if(symbol.equals("epsilon"))
+                            parseTable.put(new Pair(key, "$"), "epsilon");
+                        else
+                            parseTable.put(new Pair(key, symbol), "epsilon");
+                    }
+                }
+            }
+        });
+    }
+
     public String printFirst() {
         StringBuilder builder = new StringBuilder();
         firstSet.forEach((k, v) -> {
@@ -168,6 +230,14 @@ public class Parser {
         StringBuilder builder = new StringBuilder();
         followSet.forEach((k, v) -> {
             builder.append(k).append(": ").append(v).append("\n");
+        });
+        return builder.toString();
+    }
+
+    public String printParseTable(){
+        StringBuilder builder = new StringBuilder();
+        parseTable.forEach((k,v) -> {
+            builder.append(k).append(" -> ").append(v).append("\n");
         });
         return builder.toString();
     }

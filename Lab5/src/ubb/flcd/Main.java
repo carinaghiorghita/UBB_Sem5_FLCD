@@ -16,5 +16,6 @@ public class Main {
         Parser parser = new Parser(grammar);
         System.out.println(parser.printFirst());
         System.out.println(parser.printFollow());
+        System.out.println(parser.printParseTable());
     }
 }
