@@ -1,9 +1,6 @@
 package ubb.flcd;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toSet;
 
 public class Parser {
     private Grammar grammar;
@@ -50,8 +47,6 @@ public class Parser {
                             break;
                         }
                     toAdd.addAll(multipleConcatenation(firstSet, rhsNonTerminals, rhsTerminal));
-
-
                 }
                 if (!toAdd.equals(firstSet.get(nonterminal))) {
                     isChanged = true;
@@ -111,20 +106,69 @@ public class Parser {
         while (isChanged) {
             isChanged = false;
             HashMap<String, Set<String>> newColumn = new HashMap<>();
+            /*HashMap<String, Set<String>> newColumn = new HashMap<>();
+            followSet.forEach((k,v) -> {
+                if(!newColumn.containsKey(k))
+                    newColumn.put(k,new HashSet<>());
+                newColumn.get(k).addAll(v);
+            });*/
 
             for (String nonterminal : grammar.getN()) {
-                var productionsWithNonterminalInRhs = new HashSet<>();
-                var allProductions = grammar.getP().values();
-                for (var productions : allProductions) {
-                    for (var eachProduction : productions)
-                        if (eachProduction.contains(nonterminal))
-                            productionsWithNonterminalInRhs.add(eachProduction);
+                newColumn.put(nonterminal, new HashSet<>());
+                var productionsWithNonterminalInRhs = new HashMap<String, Set<List<String>>>();
+                var allProductions = grammar.getP();
+                allProductions.forEach((k, v) -> {
+                    for (var eachProduction : v) {
+                        if (eachProduction.contains(nonterminal)) {
+                            var key = k.iterator().next();
+                            if (!productionsWithNonterminalInRhs.containsKey(key))
+                                productionsWithNonterminalInRhs.put(key, new HashSet<>());
+                            productionsWithNonterminalInRhs.get(key).add(eachProduction);
+                        }
+                    }
+                });
+                var toAdd = new HashSet<>(followSet.get(nonterminal));
+                productionsWithNonterminalInRhs.forEach((k, v) -> {
+                    for (var production : v) {
+                        var productionList = (ArrayList<String>) production;
+                        var indexOfNonterminal = productionList.indexOf(nonterminal);
+                        if (indexOfNonterminal + 1 == productionList.size()) {
+                            toAdd.addAll(followSet.get(k));
+                        } else {
+                            var followSymbol = productionList.get(indexOfNonterminal + 1);
+                            if (grammar.getE().contains(followSymbol))
+                                toAdd.add(followSymbol);
+                            else {
+                                toAdd.addAll(firstSet.get(followSymbol));
+                                toAdd.addAll(followSet.get(k));
+                            }
+                        }
+                    }
+                });
+                if (!toAdd.equals(followSet.get(nonterminal))) {
+                    isChanged = true;
                 }
-                System.out.print(productionsWithNonterminalInRhs);
-                for (var production : productionsWithNonterminalInRhs) {
-                    //int index =
-                }
+                newColumn.put(nonterminal, toAdd);
             }
+
+            followSet = newColumn;
+
         }
+    }
+
+    public String printFirst() {
+        StringBuilder builder = new StringBuilder();
+        firstSet.forEach((k, v) -> {
+            builder.append(k).append(": ").append(v).append("\n");
+        });
+        return builder.toString();
+    }
+
+    public String printFollow() {
+        StringBuilder builder = new StringBuilder();
+        followSet.forEach((k, v) -> {
+            builder.append(k).append(": ").append(v).append("\n");
+        });
+        return builder.toString();
     }
 }
