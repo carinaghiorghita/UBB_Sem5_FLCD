@@ -2,13 +2,13 @@ package ubb.flcd;
 
 import java.util.Objects;
 
-public class Pair {
-    public String first;
-    public String second;
+public class Pair<K,V> {
+    public K first;
+    public V second;
 
-    public Pair(String f, String s){
-        this.first = f;
-        this.second = s;
+    public Pair(K first, V second){
+        this.first = first;
+        this.second = second;
     }
 
     @Override
@@ -31,5 +31,13 @@ public class Pair {
                 first +
                 "," + second +
                 ')';
+    }
+
+    public K getFirst() {
+        return first;
+    }
+
+    public V getSecond() {
+        return second;
     }
 }

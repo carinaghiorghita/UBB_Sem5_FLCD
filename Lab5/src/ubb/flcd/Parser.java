@@ -6,7 +6,7 @@ public class Parser {
     private final Grammar grammar;
     private HashMap<String, Set<String>> firstSet;
     private HashMap<String, Set<String>> followSet;
-    private HashMap<Pair, String> parseTable;
+    private HashMap<Pair, Pair> parseTable;
 
     public Parser(Grammar grammar) {
         this.grammar = grammar;
@@ -165,58 +165,102 @@ public class Parser {
 
         for (var row : rows)
             for (var col : columns)
-                parseTable.put(new Pair(row, col), "err");
+                parseTable.put(new Pair<String, String>(row, col), new Pair<String, Integer>("err",-1));
 
         for (var col : columns)
-            parseTable.put(new Pair(col, col), "pop");
+            parseTable.put(new Pair<String, String>(col, col), new Pair<String, Integer>("pop",-1));
 
-        parseTable.put(new Pair("$", "$"), "acc");
+        parseTable.put(new Pair<String, String>("$", "$"), new Pair<String, Integer>("acc",-1));
 
         var productions = grammar.getP();
-        productions.forEach((k,v) -> {
+        var productionsLhs = new ArrayList<>();
+        for(var prod : productions.values())
+            productionsLhs.addAll(prod);
+
+        productions.forEach((k, v) -> {
             var key = k.iterator().next();
 
-            for(var production : v){
+            for (var production : v) {
                 var firstSymbol = production.get(0);
-                if(grammar.getE().contains(firstSymbol))
-                    parseTable.put(new Pair(key, firstSymbol), String.join(" ",production));
-                else if(grammar.getN().contains(firstSymbol)){
-                    if(production.size() == 1)
+                if (grammar.getE().contains(firstSymbol))
+                    if (parseTable.get(new Pair<>(key, firstSymbol)).getFirst().equals("err"))
+                        parseTable.put(new Pair<>(key, firstSymbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
+                    else {
+                        try {
+                            throw new IllegalAccessException("CONFLICT");
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                else if (grammar.getN().contains(firstSymbol)) {
+                    if (production.size() == 1)
                         for (var symbol : firstSet.get(firstSymbol))
-                            parseTable.put(new Pair(key, symbol), String.join(" ",production));
+                            if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err"))
+                                parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
+                            else {
+                                try {
+                                    throw new IllegalAccessException("CONFLICT");
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                     else {
                         var i = 1;
                         var nextSymbol = production.get(1);
                         var firstSetForProduction = firstSet.get(firstSymbol);
 
-                        while (i < production.size() && grammar.getN().contains(nextSymbol)){
+                        while (i < production.size() && grammar.getN().contains(nextSymbol)) {
                             var firstForNext = firstSet.get(nextSymbol);
-                            if(firstSetForProduction.contains("epsilon")){
+                            if (firstSetForProduction.contains("epsilon")) {
                                 firstSetForProduction.remove("epsilon");
                                 firstSetForProduction.addAll(firstForNext);
                             }
 
                             i++;
-                            if(i<production.size())
+                            if (i < production.size())
                                 nextSymbol = production.get(i);
                         }
 
-                        for(var symbol : firstSetForProduction)
-                            parseTable.put(new Pair(key, symbol), String.join(" ",production));
+                        for (var symbol : firstSetForProduction)
+                            if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err"))
+                                parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
+                            else {
+                                try {
+                                    throw new IllegalAccessException("CONFLICT");
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                     }
-                }
-                else {
+                } else {
                     var follow = followSet.get(key);
-                    for(var symbol : follow){
-                        if(symbol.equals("epsilon"))
-                            parseTable.put(new Pair(key, "$"), "epsilon");
-                        else
-                            parseTable.put(new Pair(key, symbol), "epsilon");
+                    for (var symbol : follow) {
+                        if (symbol.equals("epsilon")) {
+                            if (parseTable.get(new Pair<>(key, "$")).getFirst().equals("err"))
+                                parseTable.put(new Pair<>(key, "$"), new Pair<>("epsilon",productionsLhs.indexOf(production)+1));
+                            else {
+                                try {
+                                    throw new IllegalAccessException("CONFLICT");
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err"))
+                            parseTable.put(new Pair<>(key, symbol), new Pair<>("epsilon",productionsLhs.indexOf(production)+1));
+                        else {
+                            try {
+                                throw new IllegalAccessException("CONFLICT");
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
         });
+
     }
+
 
     public String printFirst() {
         StringBuilder builder = new StringBuilder();
@@ -234,11 +278,19 @@ public class Parser {
         return builder.toString();
     }
 
-    public String printParseTable(){
+    public String printParseTable() {
         StringBuilder builder = new StringBuilder();
-        parseTable.forEach((k,v) -> {
+        parseTable.forEach((k, v) -> {
             builder.append(k).append(" -> ").append(v).append("\n");
         });
         return builder.toString();
+    }
+
+    public List<Integer> parseSequence(List<String> sequence){
+        Stack<String> alpha = new Stack<>();
+        Stack<String> beta = new Stack<>();
+        List<Integer> result = new ArrayList<>();
+
+        return result;
     }
 }
