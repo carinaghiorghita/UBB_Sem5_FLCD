@@ -18,7 +18,7 @@ public class Main {
         Parser parser = new Parser(grammar);
 //        System.out.println(parser.printFirst());
 //        System.out.println(parser.printFollow());
-        System.out.println(parser.printParseTable());
+//        System.out.println(parser.printParseTable());
         List<String> sequence = List.of("(","int",")","+","int");
         System.out.println(parser.parseSequence(sequence));
     }

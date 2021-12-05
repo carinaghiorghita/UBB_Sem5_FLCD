@@ -194,7 +194,7 @@ public class Parser {
                         parseTable.put(new Pair<>(key, firstSymbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
                     else {
                         try {
-                            throw new IllegalAccessException("CONFLICT");
+                            throw new IllegalAccessException("CONFLICT: Pair "+key+","+firstSymbol);
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -206,7 +206,7 @@ public class Parser {
                                 parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
                             else {
                                 try {
-                                    throw new IllegalAccessException("CONFLICT");
+                                    throw new IllegalAccessException("CONFLICT: Pair "+key+","+symbol);
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -233,7 +233,7 @@ public class Parser {
                                 parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production),productionsLhs.indexOf(production)+1));
                             else {
                                 try {
-                                    throw new IllegalAccessException("CONFLICT");
+                                    throw new IllegalAccessException("CONFLICT: Pair "+key+","+symbol);
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -249,7 +249,7 @@ public class Parser {
                             }
                             else {
                                 try {
-                                    throw new IllegalAccessException("CONFLICT");
+                                    throw new IllegalAccessException("CONFLICT: Pair "+key+","+symbol);
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -260,7 +260,7 @@ public class Parser {
                         }
                         else {
                             try {
-                                throw new IllegalAccessException("CONFLICT");
+                                throw new IllegalAccessException("CONFLICT: Pair "+key+","+symbol);
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
