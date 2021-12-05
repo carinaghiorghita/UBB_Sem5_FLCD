@@ -3,8 +3,8 @@ package ubb.flcd;
 import java.util.Objects;
 
 public class Pair<K,V> {
-    public K first;
-    public V second;
+    private K first;
+    private V second;
 
     public Pair(K first, V second){
         this.first = first;

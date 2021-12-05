@@ -1,27 +1,14 @@
-N = { program declaration_list statements declaration var_type identifier end_identifier letter digit non_zero_digit expression sign term number_const number_sign int_number end_number string_const end_string char char_const statement simple_stmt struct_stmt assignment_stmt input_output_stmt if_stmt while_stmt condition relation }
-E = { ; int float long unsigned char string = + - * / % read print ( ) { } " ' == != < > <= >= if else while . _ 0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z }
+N = { program declaration_list statements declaration var_type expression sign term statement simple_stmt struct_stmt assignment_stmt input_output_stmt if_stmt while_stmt condition relation }
+E = { ; int float long unsigned char string = + - * / % read print ( ) { } " ' == != < > <= >= if else while identifier number_const string_const char_const }
 S = program
 P = {
     program -> declaration_list statements
     declaration_list -> declaration declaration_list | epsilon
     declaration -> var_type identifier = expression | var_type identifier
     var_type -> int | float | long | unsigned | char | string
-    identifier -> letter end_identifier
-    end_identifier -> letter | digit | _ | letter end_identifier | digit end_identifier | _ end_identifier | epsilon
-    letter -> A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
-    digit -> 0 | non_zero_digit
-    non_zero_digit -> 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
     expression -> expression sign term | term
     sign -> + | - | * | / | %
     term -> identifier | number_const | string_const | char_const
-    number_const -> number_sign int_number | int_number | number_sign int_number . int_number | int_number . int_number | 0
-    number_sign -> + | -
-    int_number -> non_zero_digit end_number
-    end_number -> digit end_number | epsilon
-    string_const -> " end_string
-    end_string -> " | char end_string
-    char -> letter | digit
-    char_const -> ' char '
     statements -> statement statements | epsilon
     statement -> simple_stmt | struct_stmt
     simple_stmt -> assignment_stmt | input_output_stmt

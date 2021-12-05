@@ -174,8 +174,15 @@ public class Parser {
 
         var productions = grammar.getP();
         var productionsLhs = new ArrayList<>();
-        for(var prod : productions.values())
-            productionsLhs.addAll(prod);
+        productions.forEach((k,v) -> {
+            var nonterminal = k.iterator().next();
+            for(var prod : v)
+                    if(!prod.get(0).equals("epsilon"))
+                        productionsLhs.add(prod);
+                    else {
+                        productionsLhs.add("epsilon " + nonterminal);
+                    }
+        });
 
         productions.forEach((k, v) -> {
             var key = k.iterator().next();
@@ -236,8 +243,10 @@ public class Parser {
                     var follow = followSet.get(key);
                     for (var symbol : follow) {
                         if (symbol.equals("epsilon")) {
-                            if (parseTable.get(new Pair<>(key, "$")).getFirst().equals("err"))
-                                parseTable.put(new Pair<>(key, "$"), new Pair<>("epsilon",productionsLhs.indexOf(production)+1));
+                            if (parseTable.get(new Pair<>(key, "$")).getFirst().equals("err")) {
+                                var prod = "epsilon "+key;
+                                parseTable.put(new Pair<>(key, "$"), new Pair<>("epsilon", productionsLhs.indexOf(prod) + 1));
+                            }
                             else {
                                 try {
                                     throw new IllegalAccessException("CONFLICT");
@@ -245,8 +254,10 @@ public class Parser {
                                     e.printStackTrace();
                                 }
                             }
-                        } else if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err"))
-                            parseTable.put(new Pair<>(key, symbol), new Pair<>("epsilon",productionsLhs.indexOf(production)+1));
+                        } else if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err")) {
+                            var prod = "epsilon " + key;
+                            parseTable.put(new Pair<>(key, symbol), new Pair<>("epsilon", productionsLhs.indexOf(prod) + 1));
+                        }
                         else {
                             try {
                                 throw new IllegalAccessException("CONFLICT");
@@ -290,6 +301,43 @@ public class Parser {
         Stack<String> alpha = new Stack<>();
         Stack<String> beta = new Stack<>();
         List<Integer> result = new ArrayList<>();
+
+        //initialization
+        alpha.push("$");
+        for(var i=sequence.size()-1;i>=0;--i)
+            alpha.push(sequence.get(i));
+
+        beta.push("$");
+        beta.push(grammar.getS());
+
+//        result = new ArrayList<>(List.of("epsilon"));
+
+        while(!(alpha.peek().equals("$") && beta.peek().equals("$"))){
+            String alphaPeek = alpha.peek();
+            String betaPeek = beta.peek();
+            Pair<String,String> key = new Pair<>(betaPeek,alphaPeek);
+            Pair<String,Integer> value = parseTable.get(key);
+
+            if(!value.getFirst().equals("err")){
+                if(value.getFirst().equals("pop")){
+                    alpha.pop();
+                    beta.pop();
+                }
+                else {
+                    beta.pop();
+                    if(!value.getFirst().equals("epsilon")) {
+                        String[] val = value.getFirst().split(" ");
+                        for (var i = val.length - 1; i >= 0; --i)
+                            beta.push(val[i]);
+                    }
+                    result.add(value.getSecond());
+                }
+            }
+            else {
+                result = new ArrayList<>(List.of(-1));
+                return result;
+            }
+        }
 
         return result;
     }

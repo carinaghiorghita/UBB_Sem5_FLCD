@@ -1,7 +1,9 @@
-N = { S A }
-E = { a b c }
+N = { S A B C }
+E = { ( ) + * int }
 S = S
 P = {
-    S -> a A | A
-    A -> b A | c | epsilon
+    S -> A B
+    A -> ( S ) | int C
+    B -> + S | epsilon
+    C -> * A | epsilon
 }
