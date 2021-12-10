@@ -7,6 +7,7 @@ public class Parser {
     private HashMap<String, Set<String>> firstSet;
     private HashMap<String, Set<String>> followSet;
     private HashMap<Pair, Pair> parseTable;
+    private List<List<String>> productionsRhs;
 
     public Parser(Grammar grammar) {
         this.grammar = grammar;
@@ -176,14 +177,14 @@ public class Parser {
         parseTable.put(new Pair<String, String>("$", "$"), new Pair<String, Integer>("acc",-1));
 
         var productions = grammar.getP();
-        var productionsRhs = new ArrayList<>();
+        this.productionsRhs = new ArrayList<>();
         productions.forEach((k,v) -> {
             var nonterminal = k.iterator().next();
             for(var prod : v)
                     if(!prod.get(0).equals("epsilon"))
                         productionsRhs.add(prod);
                     else {
-                        productionsRhs.add("epsilon " + nonterminal);
+                        productionsRhs.add(new ArrayList<>(List.of("epsilon", nonterminal)));
                     }
         });
 
@@ -249,7 +250,7 @@ public class Parser {
                     for (var symbol : follow) {
                         if (symbol.equals("epsilon")) {
                             if (parseTable.get(new Pair<>(key, "$")).getFirst().equals("err")) {
-                                var prod = "epsilon "+key;
+                                var prod = new ArrayList<>(List.of("epsilon",key));
                                 parseTable.put(new Pair<>(key, "$"), new Pair<>("epsilon", productionsRhs.indexOf(prod) + 1));
                             }
                             else {
@@ -260,7 +261,7 @@ public class Parser {
                                 }
                             }
                         } else if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err")) {
-                            var prod = "epsilon " + key;
+                            var prod = new ArrayList<>(List.of("epsilon",key));
                             parseTable.put(new Pair<>(key, symbol), new Pair<>("epsilon", productionsRhs.indexOf(prod) + 1));
                         }
                         else {
@@ -315,8 +316,6 @@ public class Parser {
         beta.push("$");
         beta.push(grammar.getS());
 
-//        result = new ArrayList<>(List.of("epsilon"));
-
         while(!(alpha.peek().equals("$") && beta.peek().equals("$"))){
             String alphaPeek = alpha.peek();
             String betaPeek = beta.peek();
@@ -345,5 +344,20 @@ public class Parser {
         }
 
         return result;
+    }
+
+    public List<String> getProductionByOrderNumber(int order){
+        var production = productionsRhs.get(order-1);
+        if(production.contains("epsilon"))
+            return List.of("epsilon");
+        return production;
+    }
+
+    public Grammar getGrammar() {
+        return grammar;
+    }
+
+    public List<List<String>> getProductionsRhs() {
+        return productionsRhs;
     }
 }
