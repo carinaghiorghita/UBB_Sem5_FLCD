@@ -1,0 +1,8 @@
+float identifier ;
+int identifier = constant + constant ;
+if ( constant == identifier ) { identifier = constant / constant ; }
+else {
+while ( identifier <= constant ) { identifier = constant + constant ; read ( identifier ) ; }
+}
+read ( identifier ) ;
+print ( constant ) ;

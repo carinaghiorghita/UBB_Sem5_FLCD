@@ -1,21 +1,24 @@
-N = { program declaration_list statements declaration var_type expression sign term statement simple_stmt struct_stmt assignment_stmt input_output_stmt if_stmt while_stmt condition relation }
-E = { ; int float long unsigned char string = + - * / % read print ( ) { } " ' == != < > <= >= if else while identifier number_const string_const char_const }
+N = { program declaration_list statements declaration equal_expression var_type expression sign sign_and_expression term statement simple_stmt struct_stmt assignment_stmt input_output_stmt if_stmt else_stmt while_stmt condition relation }
+E = { ; int float long unsigned char string = + - * / % read print ( ) { } " ' == != < > <= >= if else while identifier constant }
 S = program
 P = {
     program -> declaration_list statements
     declaration_list -> declaration declaration_list | epsilon
-    declaration -> var_type identifier = expression | var_type identifier
+    declaration -> var_type identifier equal_expression ;
+    equal_expression -> = expression | epsilon
     var_type -> int | float | long | unsigned | char | string
-    expression -> expression sign term | term
+    expression -> term sign_and_expression
+    sign_and_expression -> sign expression | epsilon
     sign -> + | - | * | / | %
-    term -> identifier | number_const | string_const | char_const
+    term -> identifier | constant
     statements -> statement statements | epsilon
     statement -> simple_stmt | struct_stmt
     simple_stmt -> assignment_stmt | input_output_stmt
     struct_stmt -> if_stmt | while_stmt
     assignment_stmt -> identifier = expression ;
-    input_output_stmt -> read ( identifier ) ; | print ( identifier ) ;
-    if_stmt -> if ( condition ) { statements } else { statements } | if ( condition ) { statements }
+    input_output_stmt -> read ( term ) ; | print ( term ) ;
+    if_stmt -> if ( condition ) { statements } else_stmt
+    else_stmt -> else { statements } | epsilon
     while_stmt -> while ( condition ) { statements }
     condition -> expression relation expression
     relation -> == | != | < | > | <= | >=

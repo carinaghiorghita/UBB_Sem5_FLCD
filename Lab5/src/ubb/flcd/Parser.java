@@ -128,22 +128,24 @@ public class Parser {
                 productionsWithNonterminalInRhs.forEach((k, v) -> {
                     for (var production : v) {
                         var productionList = (ArrayList<String>) production;
-                        var indexOfNonterminal = productionList.indexOf(nonterminal);
-                        if (indexOfNonterminal + 1 == productionList.size()) {
-                            toAdd.addAll(followSet.get(k));
-                        } else {
-                            var followSymbol = productionList.get(indexOfNonterminal + 1);
-                            if (grammar.getE().contains(followSymbol))
-                                toAdd.add(followSymbol);
-                            else {
-                                for(var symbol : firstSet.get(followSymbol)){
-                                    if(symbol.equals("epsilon"))
-                                        toAdd.addAll(followSet.get(k));
-                                    else
-                                        toAdd.addAll(firstSet.get(followSymbol));
+                        for (var indexOfNonterminal = 0; indexOfNonterminal < productionList.size(); ++indexOfNonterminal)
+                            if (productionList.get(indexOfNonterminal).equals(nonterminal)) {
+                                if (indexOfNonterminal + 1 == productionList.size()) {
+                                    toAdd.addAll(followSet.get(k));
+                                } else {
+                                    var followSymbol = productionList.get(indexOfNonterminal + 1);
+                                    if (grammar.getE().contains(followSymbol))
+                                        toAdd.add(followSymbol);
+                                    else {
+                                        for (var symbol : firstSet.get(followSymbol)) {
+                                            if (symbol.equals("epsilon"))
+                                                toAdd.addAll(followSet.get(k));
+                                            else
+                                                toAdd.addAll(firstSet.get(followSymbol));
+                                        }
+                                    }
                                 }
                             }
-                        }
                     }
                 });
                 if (!toAdd.equals(followSet.get(nonterminal))) {
@@ -234,16 +236,19 @@ public class Parser {
                                 nextSymbol = production.get(i);
                         }
 
-                        for (var symbol : firstSetForProduction)
+                        for (var symbol : firstSetForProduction) {
+                            if (symbol.equals("epsilon"))
+                                symbol = "$";
                             if (parseTable.get(new Pair<>(key, symbol)).getFirst().equals("err"))
-                                parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production),productionsRhs.indexOf(production)+1));
+                                parseTable.put(new Pair<>(key, symbol), new Pair<>(String.join(" ", production), productionsRhs.indexOf(production) + 1));
                             else {
                                 try {
-                                    throw new IllegalAccessException("CONFLICT: Pair "+key+","+symbol);
+                                    throw new IllegalAccessException("CONFLICT: Pair " + key + "," + symbol);
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
                             }
+                        }
                     }
                 } else {
                     var follow = followSet.get(key);
@@ -338,6 +343,10 @@ public class Parser {
                 }
             }
             else {
+                System.out.println("Syntax error for key "+key);
+                System.out.println("Current alpha and beta for sequence parsing:");
+                System.out.println(alpha);
+                System.out.println(beta);
                 result = new ArrayList<>(List.of(-1));
                 return result;
             }
