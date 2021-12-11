@@ -1,5 +1,8 @@
 package ubb.flcd;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 public class ParserOutput {
@@ -9,11 +12,13 @@ public class ParserOutput {
     private Boolean hasErrors;
     private List<Node> nodeList = new ArrayList<>();
     private Node root;
+    private String outputFile;
 
-    public ParserOutput(Parser parser, List<String> sequence){
+    public ParserOutput(Parser parser, List<String> sequence, String outputFile){
         this.parser = parser;
         this.productions = parser.parseSequence(sequence);
         this.hasErrors = this.productions.contains(-1);
+        this.outputFile = outputFile;
         generateTree();
     }
 
@@ -72,10 +77,19 @@ public class ParserOutput {
     }
 
     public void printTree(){
-        nodeList.sort(Comparator.comparing(Node::getIndex));
-        System.out.println("Index | Value | Parent | Sibling");
-        for(Node node : nodeList){
-            System.out.println(node.getIndex()+" | "+node.getValue()+" | "+node.getParent()+" | "+node.getSibling());
+        try {
+            nodeList.sort(Comparator.comparing(Node::getIndex));
+            File file = new File(outputFile);
+            FileWriter fileWriter = new FileWriter(file, false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write("Index | Value | Parent | Sibling"+ "\n");
+            for (Node node : nodeList) {
+                bufferedWriter.write(node.getIndex() + " | " + node.getValue() + " | " + node.getParent() + " | " + node.getSibling() + "\n");
+            }
+            bufferedWriter.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

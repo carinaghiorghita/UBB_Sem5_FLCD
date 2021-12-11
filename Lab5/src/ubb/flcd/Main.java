@@ -51,7 +51,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-	    Grammar grammar = new Grammar("src/ubb/flcd/Resources/g2.txt");
+	    Grammar grammar = new Grammar("src/ubb/flcd/Resources/g1.txt");
 
 //        System.out.println(grammar.printNonTerminals());
 //        System.out.println(grammar.printTerminals());
@@ -66,12 +66,12 @@ public class Main {
         System.out.println(parser.printFollow());
         System.out.println(parser.printParseTable());
 //        List<String> sequence = List.of("(","int",")","+","int");
-//        List<String> sequence = readText("src/ubb/flcd/Resources/P1err.txt");
-        List<String> sequence = readPIF("src/ubb/flcd/Resources/PIF1.txt");
-//        System.out.println(parser.parseSequence(sequence));
+        List<String> sequence = readText("src/ubb/flcd/Resources/seq.txt");
+//        List<String> sequence = readPIF("src/ubb/flcd/Resources/PIF.txt");
+        System.out.println(parser.parseSequence(sequence));
 //        System.out.println(parser.getProductionsRhs());
 
-        ParserOutput parserOutput = new ParserOutput(parser,sequence);
+        ParserOutput parserOutput = new ParserOutput(parser,sequence,"src/ubb/flcd/Resources/out1.txt");
         parserOutput.printTree();
     }
 }
