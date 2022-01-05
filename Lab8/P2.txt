@@ -1,4 +1,4 @@
-int a=-3.7;
+int a=-3.7*5;
 string b="string";
 char c='x';
 read(a);
@@ -8,7 +8,9 @@ while (b!=0) {
 	a=b;
 	b=c;
 }
-if(a==0)
+if(a==0){
 	print(a);
-else
+}
+else{
 	print(b);
+}

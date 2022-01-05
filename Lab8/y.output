@@ -1,0 +1,916 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: declaration_list statements
+
+    2 declaration_list: declaration declaration_list
+    3                 | /* empty */
+
+    4 declaration: var_type IDENTIFIER equal_expression semicolon
+
+    5 equal_expression: eq expression
+    6                 | /* empty */
+
+    7 var_type: INT
+    8         | FLOAT
+    9         | LONG
+   10         | UNSIGNED
+   11         | CHAR
+   12         | STRING
+
+   13 expression: term sign_and_expression
+
+   14 sign_and_expression: sign expression
+   15                    | /* empty */
+
+   16 sign: plus
+   17     | minus
+   18     | mul
+   19     | division
+   20     | mod
+
+   21 term: IDENTIFIER
+   22     | constant
+
+   23 constant: NUMBER_CONST
+   24         | STRING_CONST
+   25         | CHAR_CONST
+
+   26 statements: statement statements
+   27           | /* empty */
+
+   28 statement: simple_stmt
+   29          | struct_stmt
+
+   30 simple_stmt: assignment_stmt
+   31            | input_output_stmt
+
+   32 struct_stmt: if_stmt
+   33            | while_stmt
+
+   34 assignment_stmt: IDENTIFIER eq expression semicolon
+
+   35 input_output_stmt: READ leftRoundBracket term rightRoundBracket semicolon
+   36                  | PRINT leftRoundBracket term rightRoundBracket semicolon
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket else_stmt
+
+   38 else_stmt: ELSE leftCurlyBracket statements rightCurlyBracket
+   39          | /* empty */
+
+   40 while_stmt: WHILE leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket
+
+   41 condition: expression relation expression
+
+   42 relation: equal
+   43         | different
+   44         | less
+   45         | more
+   46         | lessOrEqual
+   47         | moreOrEqual
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 7
+FLOAT (259) 8
+LONG (260) 9
+UNSIGNED (261) 10
+STRING (262) 12
+CHAR (263) 11
+WHILE (264) 40
+IF (265) 37
+ELSE (266) 38
+READ (267) 35
+PRINT (268) 36
+plus (269) 16
+minus (270) 17
+mul (271) 18
+division (272) 19
+mod (273) 20
+eq (274) 5 34
+equal (275) 42
+different (276) 43
+less (277) 44
+more (278) 45
+lessOrEqual (279) 46
+moreOrEqual (280) 47
+leftRoundBracket (281) 35 36 37 40
+rightRoundBracket (282) 35 36 37 40
+semicolon (283) 4 34 35 36
+leftCurlyBracket (284) 37 38 40
+rightCurlyBracket (285) 37 38 40
+IDENTIFIER (286) 4 21 34
+NUMBER_CONST (287) 23
+STRING_CONST (288) 24
+CHAR_CONST (289) 25
+
+
+Nonterminals, with rules where they appear
+
+$accept (35)
+    on left: 0
+program (36)
+    on left: 1, on right: 0
+declaration_list (37)
+    on left: 2 3, on right: 1 2
+declaration (38)
+    on left: 4, on right: 2
+equal_expression (39)
+    on left: 5 6, on right: 4
+var_type (40)
+    on left: 7 8 9 10 11 12, on right: 4
+expression (41)
+    on left: 13, on right: 5 14 34 41
+sign_and_expression (42)
+    on left: 14 15, on right: 13
+sign (43)
+    on left: 16 17 18 19 20, on right: 14
+term (44)
+    on left: 21 22, on right: 13 35 36
+constant (45)
+    on left: 23 24 25, on right: 22
+statements (46)
+    on left: 26 27, on right: 1 26 37 38 40
+statement (47)
+    on left: 28 29, on right: 26
+simple_stmt (48)
+    on left: 30 31, on right: 28
+struct_stmt (49)
+    on left: 32 33, on right: 29
+assignment_stmt (50)
+    on left: 34, on right: 30
+input_output_stmt (51)
+    on left: 35 36, on right: 31
+if_stmt (52)
+    on left: 37, on right: 32
+else_stmt (53)
+    on left: 38 39, on right: 37
+while_stmt (54)
+    on left: 40, on right: 33
+condition (55)
+    on left: 41, on right: 37 40
+relation (56)
+    on left: 42 43 44 45 46 47, on right: 41
+
+
+state 0
+
+    0 $accept: . program $end
+
+    INT       shift, and go to state 1
+    FLOAT     shift, and go to state 2
+    LONG      shift, and go to state 3
+    UNSIGNED  shift, and go to state 4
+    STRING    shift, and go to state 5
+    CHAR      shift, and go to state 6
+
+    $default  reduce using rule 3 (declaration_list)
+
+    program           go to state 7
+    declaration_list  go to state 8
+    declaration       go to state 9
+    var_type          go to state 10
+
+
+state 1
+
+    7 var_type: INT .
+
+    $default  reduce using rule 7 (var_type)
+
+
+state 2
+
+    8 var_type: FLOAT .
+
+    $default  reduce using rule 8 (var_type)
+
+
+state 3
+
+    9 var_type: LONG .
+
+    $default  reduce using rule 9 (var_type)
+
+
+state 4
+
+   10 var_type: UNSIGNED .
+
+    $default  reduce using rule 10 (var_type)
+
+
+state 5
+
+   12 var_type: STRING .
+
+    $default  reduce using rule 12 (var_type)
+
+
+state 6
+
+   11 var_type: CHAR .
+
+    $default  reduce using rule 11 (var_type)
+
+
+state 7
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 11
+
+
+state 8
+
+    1 program: declaration_list . statements
+
+    WHILE       shift, and go to state 12
+    IF          shift, and go to state 13
+    READ        shift, and go to state 14
+    PRINT       shift, and go to state 15
+    IDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 27 (statements)
+
+    statements         go to state 17
+    statement          go to state 18
+    simple_stmt        go to state 19
+    struct_stmt        go to state 20
+    assignment_stmt    go to state 21
+    input_output_stmt  go to state 22
+    if_stmt            go to state 23
+    while_stmt         go to state 24
+
+
+state 9
+
+    2 declaration_list: declaration . declaration_list
+
+    INT       shift, and go to state 1
+    FLOAT     shift, and go to state 2
+    LONG      shift, and go to state 3
+    UNSIGNED  shift, and go to state 4
+    STRING    shift, and go to state 5
+    CHAR      shift, and go to state 6
+
+    $default  reduce using rule 3 (declaration_list)
+
+    declaration_list  go to state 25
+    declaration       go to state 9
+    var_type          go to state 10
+
+
+state 10
+
+    4 declaration: var_type . IDENTIFIER equal_expression semicolon
+
+    IDENTIFIER  shift, and go to state 26
+
+
+state 11
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 12
+
+   40 while_stmt: WHILE . leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket
+
+    leftRoundBracket  shift, and go to state 27
+
+
+state 13
+
+   37 if_stmt: IF . leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket else_stmt
+
+    leftRoundBracket  shift, and go to state 28
+
+
+state 14
+
+   35 input_output_stmt: READ . leftRoundBracket term rightRoundBracket semicolon
+
+    leftRoundBracket  shift, and go to state 29
+
+
+state 15
+
+   36 input_output_stmt: PRINT . leftRoundBracket term rightRoundBracket semicolon
+
+    leftRoundBracket  shift, and go to state 30
+
+
+state 16
+
+   34 assignment_stmt: IDENTIFIER . eq expression semicolon
+
+    eq  shift, and go to state 31
+
+
+state 17
+
+    1 program: declaration_list statements .
+
+    $default  reduce using rule 1 (program)
+
+
+state 18
+
+   26 statements: statement . statements
+
+    WHILE       shift, and go to state 12
+    IF          shift, and go to state 13
+    READ        shift, and go to state 14
+    PRINT       shift, and go to state 15
+    IDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 27 (statements)
+
+    statements         go to state 32
+    statement          go to state 18
+    simple_stmt        go to state 19
+    struct_stmt        go to state 20
+    assignment_stmt    go to state 21
+    input_output_stmt  go to state 22
+    if_stmt            go to state 23
+    while_stmt         go to state 24
+
+
+state 19
+
+   28 statement: simple_stmt .
+
+    $default  reduce using rule 28 (statement)
+
+
+state 20
+
+   29 statement: struct_stmt .
+
+    $default  reduce using rule 29 (statement)
+
+
+state 21
+
+   30 simple_stmt: assignment_stmt .
+
+    $default  reduce using rule 30 (simple_stmt)
+
+
+state 22
+
+   31 simple_stmt: input_output_stmt .
+
+    $default  reduce using rule 31 (simple_stmt)
+
+
+state 23
+
+   32 struct_stmt: if_stmt .
+
+    $default  reduce using rule 32 (struct_stmt)
+
+
+state 24
+
+   33 struct_stmt: while_stmt .
+
+    $default  reduce using rule 33 (struct_stmt)
+
+
+state 25
+
+    2 declaration_list: declaration declaration_list .
+
+    $default  reduce using rule 2 (declaration_list)
+
+
+state 26
+
+    4 declaration: var_type IDENTIFIER . equal_expression semicolon
+
+    eq  shift, and go to state 33
+
+    $default  reduce using rule 6 (equal_expression)
+
+    equal_expression  go to state 34
+
+
+state 27
+
+   40 while_stmt: WHILE leftRoundBracket . condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 39
+    term        go to state 40
+    constant    go to state 41
+    condition   go to state 42
+
+
+state 28
+
+   37 if_stmt: IF leftRoundBracket . condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket else_stmt
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 39
+    term        go to state 40
+    constant    go to state 41
+    condition   go to state 43
+
+
+state 29
+
+   35 input_output_stmt: READ leftRoundBracket . term rightRoundBracket semicolon
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    term      go to state 44
+    constant  go to state 41
+
+
+state 30
+
+   36 input_output_stmt: PRINT leftRoundBracket . term rightRoundBracket semicolon
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    term      go to state 45
+    constant  go to state 41
+
+
+state 31
+
+   34 assignment_stmt: IDENTIFIER eq . expression semicolon
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 46
+    term        go to state 40
+    constant    go to state 41
+
+
+state 32
+
+   26 statements: statement statements .
+
+    $default  reduce using rule 26 (statements)
+
+
+state 33
+
+    5 equal_expression: eq . expression
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 47
+    term        go to state 40
+    constant    go to state 41
+
+
+state 34
+
+    4 declaration: var_type IDENTIFIER equal_expression . semicolon
+
+    semicolon  shift, and go to state 48
+
+
+state 35
+
+   21 term: IDENTIFIER .
+
+    $default  reduce using rule 21 (term)
+
+
+state 36
+
+   23 constant: NUMBER_CONST .
+
+    $default  reduce using rule 23 (constant)
+
+
+state 37
+
+   24 constant: STRING_CONST .
+
+    $default  reduce using rule 24 (constant)
+
+
+state 38
+
+   25 constant: CHAR_CONST .
+
+    $default  reduce using rule 25 (constant)
+
+
+state 39
+
+   41 condition: expression . relation expression
+
+    equal        shift, and go to state 49
+    different    shift, and go to state 50
+    less         shift, and go to state 51
+    more         shift, and go to state 52
+    lessOrEqual  shift, and go to state 53
+    moreOrEqual  shift, and go to state 54
+
+    relation  go to state 55
+
+
+state 40
+
+   13 expression: term . sign_and_expression
+
+    plus      shift, and go to state 56
+    minus     shift, and go to state 57
+    mul       shift, and go to state 58
+    division  shift, and go to state 59
+    mod       shift, and go to state 60
+
+    $default  reduce using rule 15 (sign_and_expression)
+
+    sign_and_expression  go to state 61
+    sign                 go to state 62
+
+
+state 41
+
+   22 term: constant .
+
+    $default  reduce using rule 22 (term)
+
+
+state 42
+
+   40 while_stmt: WHILE leftRoundBracket condition . rightRoundBracket leftCurlyBracket statements rightCurlyBracket
+
+    rightRoundBracket  shift, and go to state 63
+
+
+state 43
+
+   37 if_stmt: IF leftRoundBracket condition . rightRoundBracket leftCurlyBracket statements rightCurlyBracket else_stmt
+
+    rightRoundBracket  shift, and go to state 64
+
+
+state 44
+
+   35 input_output_stmt: READ leftRoundBracket term . rightRoundBracket semicolon
+
+    rightRoundBracket  shift, and go to state 65
+
+
+state 45
+
+   36 input_output_stmt: PRINT leftRoundBracket term . rightRoundBracket semicolon
+
+    rightRoundBracket  shift, and go to state 66
+
+
+state 46
+
+   34 assignment_stmt: IDENTIFIER eq expression . semicolon
+
+    semicolon  shift, and go to state 67
+
+
+state 47
+
+    5 equal_expression: eq expression .
+
+    $default  reduce using rule 5 (equal_expression)
+
+
+state 48
+
+    4 declaration: var_type IDENTIFIER equal_expression semicolon .
+
+    $default  reduce using rule 4 (declaration)
+
+
+state 49
+
+   42 relation: equal .
+
+    $default  reduce using rule 42 (relation)
+
+
+state 50
+
+   43 relation: different .
+
+    $default  reduce using rule 43 (relation)
+
+
+state 51
+
+   44 relation: less .
+
+    $default  reduce using rule 44 (relation)
+
+
+state 52
+
+   45 relation: more .
+
+    $default  reduce using rule 45 (relation)
+
+
+state 53
+
+   46 relation: lessOrEqual .
+
+    $default  reduce using rule 46 (relation)
+
+
+state 54
+
+   47 relation: moreOrEqual .
+
+    $default  reduce using rule 47 (relation)
+
+
+state 55
+
+   41 condition: expression relation . expression
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 68
+    term        go to state 40
+    constant    go to state 41
+
+
+state 56
+
+   16 sign: plus .
+
+    $default  reduce using rule 16 (sign)
+
+
+state 57
+
+   17 sign: minus .
+
+    $default  reduce using rule 17 (sign)
+
+
+state 58
+
+   18 sign: mul .
+
+    $default  reduce using rule 18 (sign)
+
+
+state 59
+
+   19 sign: division .
+
+    $default  reduce using rule 19 (sign)
+
+
+state 60
+
+   20 sign: mod .
+
+    $default  reduce using rule 20 (sign)
+
+
+state 61
+
+   13 expression: term sign_and_expression .
+
+    $default  reduce using rule 13 (expression)
+
+
+state 62
+
+   14 sign_and_expression: sign . expression
+
+    IDENTIFIER    shift, and go to state 35
+    NUMBER_CONST  shift, and go to state 36
+    STRING_CONST  shift, and go to state 37
+    CHAR_CONST    shift, and go to state 38
+
+    expression  go to state 69
+    term        go to state 40
+    constant    go to state 41
+
+
+state 63
+
+   40 while_stmt: WHILE leftRoundBracket condition rightRoundBracket . leftCurlyBracket statements rightCurlyBracket
+
+    leftCurlyBracket  shift, and go to state 70
+
+
+state 64
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket . leftCurlyBracket statements rightCurlyBracket else_stmt
+
+    leftCurlyBracket  shift, and go to state 71
+
+
+state 65
+
+   35 input_output_stmt: READ leftRoundBracket term rightRoundBracket . semicolon
+
+    semicolon  shift, and go to state 72
+
+
+state 66
+
+   36 input_output_stmt: PRINT leftRoundBracket term rightRoundBracket . semicolon
+
+    semicolon  shift, and go to state 73
+
+
+state 67
+
+   34 assignment_stmt: IDENTIFIER eq expression semicolon .
+
+    $default  reduce using rule 34 (assignment_stmt)
+
+
+state 68
+
+   41 condition: expression relation expression .
+
+    $default  reduce using rule 41 (condition)
+
+
+state 69
+
+   14 sign_and_expression: sign expression .
+
+    $default  reduce using rule 14 (sign_and_expression)
+
+
+state 70
+
+   40 while_stmt: WHILE leftRoundBracket condition rightRoundBracket leftCurlyBracket . statements rightCurlyBracket
+
+    WHILE       shift, and go to state 12
+    IF          shift, and go to state 13
+    READ        shift, and go to state 14
+    PRINT       shift, and go to state 15
+    IDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 27 (statements)
+
+    statements         go to state 74
+    statement          go to state 18
+    simple_stmt        go to state 19
+    struct_stmt        go to state 20
+    assignment_stmt    go to state 21
+    input_output_stmt  go to state 22
+    if_stmt            go to state 23
+    while_stmt         go to state 24
+
+
+state 71
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket leftCurlyBracket . statements rightCurlyBracket else_stmt
+
+    WHILE       shift, and go to state 12
+    IF          shift, and go to state 13
+    READ        shift, and go to state 14
+    PRINT       shift, and go to state 15
+    IDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 27 (statements)
+
+    statements         go to state 75
+    statement          go to state 18
+    simple_stmt        go to state 19
+    struct_stmt        go to state 20
+    assignment_stmt    go to state 21
+    input_output_stmt  go to state 22
+    if_stmt            go to state 23
+    while_stmt         go to state 24
+
+
+state 72
+
+   35 input_output_stmt: READ leftRoundBracket term rightRoundBracket semicolon .
+
+    $default  reduce using rule 35 (input_output_stmt)
+
+
+state 73
+
+   36 input_output_stmt: PRINT leftRoundBracket term rightRoundBracket semicolon .
+
+    $default  reduce using rule 36 (input_output_stmt)
+
+
+state 74
+
+   40 while_stmt: WHILE leftRoundBracket condition rightRoundBracket leftCurlyBracket statements . rightCurlyBracket
+
+    rightCurlyBracket  shift, and go to state 76
+
+
+state 75
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket leftCurlyBracket statements . rightCurlyBracket else_stmt
+
+    rightCurlyBracket  shift, and go to state 77
+
+
+state 76
+
+   40 while_stmt: WHILE leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket .
+
+    $default  reduce using rule 40 (while_stmt)
+
+
+state 77
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket . else_stmt
+
+    ELSE  shift, and go to state 78
+
+    $default  reduce using rule 39 (else_stmt)
+
+    else_stmt  go to state 79
+
+
+state 78
+
+   38 else_stmt: ELSE . leftCurlyBracket statements rightCurlyBracket
+
+    leftCurlyBracket  shift, and go to state 80
+
+
+state 79
+
+   37 if_stmt: IF leftRoundBracket condition rightRoundBracket leftCurlyBracket statements rightCurlyBracket else_stmt .
+
+    $default  reduce using rule 37 (if_stmt)
+
+
+state 80
+
+   38 else_stmt: ELSE leftCurlyBracket . statements rightCurlyBracket
+
+    WHILE       shift, and go to state 12
+    IF          shift, and go to state 13
+    READ        shift, and go to state 14
+    PRINT       shift, and go to state 15
+    IDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 27 (statements)
+
+    statements         go to state 81
+    statement          go to state 18
+    simple_stmt        go to state 19
+    struct_stmt        go to state 20
+    assignment_stmt    go to state 21
+    input_output_stmt  go to state 22
+    if_stmt            go to state 23
+    while_stmt         go to state 24
+
+
+state 81
+
+   38 else_stmt: ELSE leftCurlyBracket statements . rightCurlyBracket
+
+    rightCurlyBracket  shift, and go to state 82
+
+
+state 82
+
+   38 else_stmt: ELSE leftCurlyBracket statements rightCurlyBracket .
+
+    $default  reduce using rule 38 (else_stmt)
